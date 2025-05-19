@@ -158,7 +158,7 @@ export default function AllGroups() {
                   <SelectValue placeholder="Filter by category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   {mockCategories.map((category) => (
                     <SelectItem key={category} value={category}>
                       <div className="flex items-center">
