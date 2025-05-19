@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 import { api, mockCategories, HobbyGroup } from "@/lib/api";
 import { Spinner } from "@/components/ui/custom/Spinner";
 import { Fade } from "react-awesome-reveal";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CreateGroupFormData {
   groupName: string;
@@ -40,7 +41,8 @@ export default function CreateGroup() {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<CreateGroupFormData>();
+  const { toast } = useToast();
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<CreateGroupFormData>();
   
   const selectedCategory = watch("category");
   
@@ -50,7 +52,14 @@ export default function CreateGroup() {
   const formattedDate = today.toISOString().split('T')[0];
   
   const onSubmit = async (data: CreateGroupFormData) => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Error",
+        description: "You must be logged in to create a group.",
+      });
+      return;
+    }
     
     const newGroup: HobbyGroup = {
       ...data,
@@ -76,11 +85,21 @@ export default function CreateGroup() {
       // Create the group
       await api.createGroup(newGroup, token);
       
+      // Show success message
+      toast({
+        title: "Group created!",
+        description: `Your group "${data.groupName}" has been created successfully.`,
+      });
+      
       // Navigate to my groups page
       navigate("/my-groups");
     } catch (error) {
       console.error("Error creating group:", error);
-      // Error is handled by the toast in api functions
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to create group. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -125,18 +144,8 @@ export default function CreateGroup() {
 
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
-                  <Select 
-                    {...register("category", { required: "Category is required" })}
-                    onValueChange={(value) => {
-                      // This is needed for the Select component to work with react-hook-form
-                      const event = {
-                        target: {
-                          name: "category",
-                          value,
-                        },
-                      };
-                      register("category").onChange(event);
-                    }}
+                  <Select
+                    onValueChange={(value) => setValue("category", value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a category" />
@@ -149,6 +158,10 @@ export default function CreateGroup() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <input 
+                    type="hidden" 
+                    {...register("category", { required: "Category is required" })}
+                  />
                   {errors.category && (
                     <p className="text-sm text-destructive">{errors.category.message}</p>
                   )}

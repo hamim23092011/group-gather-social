@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { HobbyGroup, api, mockCategories } from "@/lib/api";
 import { GroupCard } from "@/components/ui/custom/GroupCard";
 import { Spinner } from "@/components/ui/custom/Spinner";
@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Fade } from "react-awesome-reveal";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function AllGroups() {
   const location = useLocation();
@@ -26,6 +27,7 @@ export default function AllGroups() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState(initialCategoryFilter);
   const [sortOrder, setSortOrder] = useState("newest");
+  const { toast } = useToast();
 
   const fetchGroups = async () => {
     try {
@@ -97,6 +99,13 @@ export default function AllGroups() {
           }
         },
       ]);
+
+      // Also show a toast notification about using mock data
+      toast({
+        title: "Using mock data",
+        description: "Could not connect to the server. Using sample data instead.",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
@@ -114,7 +123,7 @@ export default function AllGroups() {
       group.location.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter(group => 
-      categoryFilter ? group.category === categoryFilter : true
+      categoryFilter === "" || categoryFilter === "all" ? true : group.category === categoryFilter
     );
 
   // Sort groups based on sort order
@@ -183,7 +192,7 @@ export default function AllGroups() {
                 </SelectContent>
               </Select>
             </div>
-            {categoryFilter && (
+            {categoryFilter && categoryFilter !== "all" && (
               <Button 
                 variant="outline" 
                 onClick={() => setCategoryFilter("")}
@@ -212,7 +221,7 @@ export default function AllGroups() {
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold mb-2">No groups found</h3>
           <p className="text-muted-foreground mb-6">
-            {categoryFilter
+            {categoryFilter && categoryFilter !== "all"
               ? `No groups found in the "${categoryFilter}" category.`
               : "No groups match your search criteria."}
           </p>

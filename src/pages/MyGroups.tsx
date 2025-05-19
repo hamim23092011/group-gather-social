@@ -51,6 +51,13 @@ export default function MyGroups() {
       } catch (error) {
         console.error("Error fetching my groups:", error);
         
+        // Show toast notification about using mock data
+        toast({
+          title: "Using mock data",
+          description: "Could not connect to the server. Using sample data instead.",
+          variant: "destructive"
+        });
+        
         // Fallback to mock data for development
         if (currentUser && currentUser.email) {
           setMyGroups([
@@ -161,15 +168,15 @@ export default function MyGroups() {
         </div>
       ) : myGroups.length > 0 ? (
         <Fade triggerOnce>
-          <div className="rounded-md border overflow-hidden">
+          <div className="rounded-md border overflow-hidden overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Group Name</TableHead>
                   <TableHead>Category</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-center">Members</TableHead>
+                  <TableHead className="hidden md:table-cell">Location</TableHead>
+                  <TableHead className="hidden md:table-cell">Date</TableHead>
+                  <TableHead className="text-center hidden md:table-cell">Members</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -194,9 +201,9 @@ export default function MyGroups() {
                         </Link>
                       </TableCell>
                       <TableCell>{group.category}</TableCell>
-                      <TableCell>{group.location}</TableCell>
-                      <TableCell>{formattedDate}</TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="hidden md:table-cell">{group.location}</TableCell>
+                      <TableCell className="hidden md:table-cell">{formattedDate}</TableCell>
+                      <TableCell className="text-center hidden md:table-cell">
                         {group.members?.length || 1} / {group.maxMembers}
                       </TableCell>
                       <TableCell>
