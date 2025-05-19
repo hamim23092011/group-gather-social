@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { 
   GoogleAuthProvider, 
   User, 
+  UserCredential,
   createUserWithEmailAndPassword, 
   onAuthStateChanged, 
   signInWithEmailAndPassword, 
@@ -16,9 +17,9 @@ import { useToast } from "@/components/ui/use-toast";
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
-  signUp: (email: string, password: string, name: string, photoURL: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  googleSignIn: () => Promise<void>;
+  signUp: (email: string, password: string, name: string, photoURL: string) => Promise<UserCredential | void>;
+  signIn: (email: string, password: string) => Promise<UserCredential | void>;
+  googleSignIn: () => Promise<UserCredential | void>;
   logOut: () => Promise<void>;
 }
 
