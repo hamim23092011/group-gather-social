@@ -1,0 +1,15 @@
+
+{
+  "projects": {
+    "default": "hobby-hub-901b1"
+  },
+  "targets": {
+    "hobby-hub-901b1": {
+      "hosting": {
+        "hobby-hub-by-hamim": [
+          "hobby-hub-by-hamim"
+        ]
+      }
+    }
+  }
+}

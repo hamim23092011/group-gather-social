@@ -16,8 +16,8 @@ export interface HobbyGroup {
   members?: { name: string; email: string }[];
 }
 
-// Base URL for our API
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// Base URL for our API - use MongoDB connection
+const API_BASE_URL = "https://hobby-hub-backend-hamim.vercel.app/api" || "http://localhost:5000/api";
 
 // Helper function to handle API responses
 const handleResponse = async (response: Response) => {
