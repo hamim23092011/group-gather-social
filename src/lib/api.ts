@@ -17,7 +17,7 @@ export interface HobbyGroup {
 }
 
 // Base URL for our API - use MongoDB connection
-const API_BASE_URL = "https://hobby-hub-backend-hamim.vercel.app/api" || "http://localhost:5000/api";
+const API_BASE_URL = "https://hobby-hub-backend-hamim.vercel.app/api";
 
 // Helper function to handle API responses
 const handleResponse = async (response: Response) => {
