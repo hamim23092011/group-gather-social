@@ -8,6 +8,7 @@ import { GroupCard } from "@/components/ui/custom/GroupCard";
 import { HobbyStats } from "@/components/ui/custom/HobbyStats";
 import { HobbyGroup, api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { CategoryIcon } from "@/components/ui/custom/CategoryIcons";
 
 // Carousel images
 const bannerSlides = [
@@ -22,7 +23,7 @@ const bannerSlides = [
     description: "Create groups around activities you love"
   },
   {
-    image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2370&q=80",
+    image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaHl8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2370&q=80",
     title: "Make Local Connections",
     description: "Build meaningful relationships in your area"
   }
