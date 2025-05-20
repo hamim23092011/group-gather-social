@@ -26,9 +26,19 @@ app.get('/', (req, res) => {
   res.send('HobbyHub API is running');
 });
 
+// MongoDB connection string validation
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hobbyhub';
+
+// Check if the MongoDB URI is valid
+if (!MONGODB_URI.startsWith('mongodb://') && !MONGODB_URI.startsWith('mongodb+srv://')) {
+  console.error('Invalid MongoDB URI:', MONGODB_URI);
+  console.error('Please set a valid MONGODB_URI environment variable that starts with "mongodb://" or "mongodb+srv://"');
+  process.exit(1);
+}
+
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
     // Start server after successful DB connection
