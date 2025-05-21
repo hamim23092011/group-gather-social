@@ -1,4 +1,3 @@
-
 import { HobbyGroup } from "./types";
 import { API_BASE_URL, getFallbackGroup } from "./mock-data";
 import { handleResponse, createAuthenticatedRequestOptions } from "./utils";
@@ -135,9 +134,12 @@ export const joinGroup = async (groupId: string, userData: { name: string; email
   }
 };
 
-export const getUserGroups = async (email: string): Promise<HobbyGroup[]> => {
+export const getUserGroups = async (email: string, token: string): Promise<HobbyGroup[]> => {
   try {
     const response = await fetch(`${API_BASE_URL}/groups/user/${encodeURIComponent(email)}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       mode: 'cors' // Explicitly request CORS
     });
     return handleResponse(response);

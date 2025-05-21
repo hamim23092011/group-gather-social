@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -57,8 +56,8 @@ export default function MyGroups() {
         // Get user token
         const token = await currentUser.getIdToken();
         
-        // Fetch groups created by the user
-        const groups = await api.getUserGroups(userEmail);
+        // Fetch groups created by the user - FIXED: Added token as second argument
+        const groups = await api.getUserGroups(userEmail, token);
         setMyGroups(groups);
       } catch (error) {
         console.error("Error fetching my groups:", error);
@@ -133,8 +132,11 @@ export default function MyGroups() {
       
       setDeleteLoading(groupId);
       
-      // Delete the group using user email for authorization
-      await api.deleteGroup(groupId, currentUser.email);
+      // Get user token for authentication
+      const token = await currentUser.getIdToken();
+      
+      // Delete the group using token for authorization
+      await api.deleteGroup(groupId, token);
       
       // Update UI
       setMyGroups(prev => prev.filter(group => group._id !== groupId));
