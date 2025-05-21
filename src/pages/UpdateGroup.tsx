@@ -32,19 +32,17 @@ export default function UpdateGroup() {
         
         setLoading(true);
         
-        // Get user token
-        const token = await currentUser.getIdToken();
-        
         // Fetch the group
         const groupData = await api.getGroupById(id);
         
         // Check if the current user is the creator
-        if (groupData.createdBy.email !== currentUser.email) {
+        if (groupData.createdBy && groupData.createdBy.email !== currentUser.email) {
           setError("You don't have permission to update this group.");
           return;
         }
         
         setGroup(groupData);
+        setError(null);
         
       } catch (error) {
         console.error("Error fetching group:", error);

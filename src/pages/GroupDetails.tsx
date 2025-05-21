@@ -278,7 +278,7 @@ export default function GroupDetails() {
                 </svg>
                 <h3 className="text-xl font-semibold mb-2">Group is full</h3>
                 <p className="text-muted-foreground">
-                  This group has reached its maximum capacity of {group.maxMembers} members.
+                  This group has reached its maximum capacity of {group?.maxMembers} members.
                 </p>
               </div>
             ) : (
@@ -294,7 +294,7 @@ export default function GroupDetails() {
                   Join Group
                 </Button>
                 <Tooltip id="join-tooltip">
-                  Connect with others who share your interest in {group.category}
+                  Connect with others who share your interest in {group?.category}
                 </Tooltip>
               </div>
             )}
@@ -302,9 +302,9 @@ export default function GroupDetails() {
           
           {/* Members */}
           <div className="bg-card p-6 rounded-lg border">
-            <h3 className="text-xl font-semibold mb-4">Members ({group.members?.length || 1} / {group.maxMembers})</h3>
+            <h3 className="text-xl font-semibold mb-4">Members ({group?.members?.length || 1} / {group?.maxMembers})</h3>
             <ul className="space-y-3">
-              {group.members?.slice(0, 5).map((member, i) => (
+              {group?.members?.slice(0, 5).map((member, i) => (
                 <li key={i} className="flex items-center">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm mr-3">
                     {member.name.charAt(0).toUpperCase()}
@@ -314,7 +314,7 @@ export default function GroupDetails() {
                   </div>
                 </li>
               ))}
-              {group.members && group.members.length > 5 && (
+              {group?.members && group.members.length > 5 && (
                 <li className="text-center text-muted-foreground text-sm">
                   + {group.members.length - 5} more members
                 </li>

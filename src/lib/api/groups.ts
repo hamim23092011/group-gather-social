@@ -119,10 +119,18 @@ export const joinGroup = async (groupId: string, userData: { name: string; email
     console.error(`API Error in joinGroup for ID ${groupId}:`, error);
     // Return a mock group with the user added to members
     const mockGroup = getFallbackGroup(groupId);
+    
+    // Initialize members array if it doesn't exist
     if (!mockGroup.members) {
       mockGroup.members = [];
     }
-    mockGroup.members.push(userData);
+    
+    // Add the user only if they're not already a member
+    const isAlreadyMember = mockGroup.members.some(member => member.email === userData.email);
+    if (!isAlreadyMember) {
+      mockGroup.members.push(userData);
+    }
+    
     return mockGroup;
   }
 };

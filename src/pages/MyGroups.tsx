@@ -42,11 +42,23 @@ export default function MyGroups() {
         
         setLoading(true);
         
+        // Get user email
+        const userEmail = currentUser.email;
+        
+        if (!userEmail) {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "User email not available.",
+          });
+          return;
+        }
+        
         // Get user token
         const token = await currentUser.getIdToken();
         
         // Fetch groups created by the user
-        const groups = await api.getUserGroups(currentUser.email || "", token);
+        const groups = await api.getUserGroups(userEmail);
         setMyGroups(groups);
       } catch (error) {
         console.error("Error fetching my groups:", error);
@@ -117,15 +129,12 @@ export default function MyGroups() {
 
   const handleDeleteGroup = async (groupId: string) => {
     try {
-      if (!currentUser) return;
+      if (!currentUser || !currentUser.email) return;
       
       setDeleteLoading(groupId);
       
-      // Get user token
-      const token = await currentUser.getIdToken();
-      
-      // Delete the group
-      await api.deleteGroup(groupId, token);
+      // Delete the group using user email for authorization
+      await api.deleteGroup(groupId, currentUser.email);
       
       // Update UI
       setMyGroups(prev => prev.filter(group => group._id !== groupId));

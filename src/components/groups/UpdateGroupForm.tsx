@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -65,17 +66,27 @@ export default function UpdateGroupForm({ group, groupId, onSuccess }: UpdateGro
       
       setUpdating(true);
       
-      // Get user token
+      // Get user token and email
       const token = await currentUser.getIdToken();
+      const userEmail = currentUser.email;
       
-      // Update the group
+      if (!userEmail) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "User email not available.",
+        });
+        return;
+      }
+      
+      // Update the group with userEmail for authorization check
       await api.updateGroup(
         groupId,
         {
           ...data,
           maxMembers: Number(data.maxMembers),
         },
-        token
+        userEmail
       );
       
       // Show success message
