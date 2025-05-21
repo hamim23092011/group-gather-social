@@ -14,9 +14,10 @@ const PORT = process.env.PORT || 5000;
 
 // Enhanced CORS configuration to allow requests from any origin
 app.use(cors({
-  origin: '*',
+  origin: '*', // Allows all origins
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Allow credentials (cookies, authorization headers, etc)
 }));
 app.use(express.json());
 app.use(morgan('dev'));

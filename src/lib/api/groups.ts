@@ -6,7 +6,9 @@ import { handleResponse, createAuthenticatedRequestOptions } from "./utils";
 // Groups API functions
 export const getGroups = async (): Promise<HobbyGroup[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/groups`);
+    const response = await fetch(`${API_BASE_URL}/groups`, {
+      mode: 'cors' // Explicitly request CORS
+    });
     return handleResponse(response);
   } catch (error) {
     console.error("API Error in getGroups:", error);
@@ -18,7 +20,9 @@ export const getGroups = async (): Promise<HobbyGroup[]> => {
 
 export const getFeaturedGroups = async (): Promise<HobbyGroup[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/groups/featured`);
+    const response = await fetch(`${API_BASE_URL}/groups/featured`, {
+      mode: 'cors' // Explicitly request CORS
+    });
     return handleResponse(response);
   } catch (error) {
     console.error("API Error in getFeaturedGroups:", error);
@@ -30,7 +34,9 @@ export const getFeaturedGroups = async (): Promise<HobbyGroup[]> => {
 
 export const getGroupById = async (id: string): Promise<HobbyGroup> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/groups/${id}`);
+    const response = await fetch(`${API_BASE_URL}/groups/${id}`, {
+      mode: 'cors' // Explicitly request CORS
+    });
     return handleResponse(response);
   } catch (error) {
     console.error(`API Error in getGroupById for ID ${id}:`, error);
@@ -49,6 +55,7 @@ export const createGroup = async (group: HobbyGroup, token: string): Promise<Hob
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(group),
+      mode: 'cors' // Explicitly request CORS
     });
     return handleResponse(response);
   } catch (error) {
@@ -69,6 +76,7 @@ export const updateGroup = async (id: string, groupData: Partial<HobbyGroup>, us
         "Content-Type": "application/json"
       },
       body: JSON.stringify(dataToSend),
+      mode: 'cors' // Explicitly request CORS
     });
     return handleResponse(response);
   } catch (error) {
@@ -83,6 +91,7 @@ export const deleteGroup = async (id: string, userEmail: string): Promise<void> 
     // Include userEmail as query parameter for authorization check
     const response = await fetch(`${API_BASE_URL}/groups/${id}?userEmail=${encodeURIComponent(userEmail)}`, {
       method: "DELETE",
+      mode: 'cors' // Explicitly request CORS
     });
     return handleResponse(response);
   } catch (error) {
@@ -92,14 +101,18 @@ export const deleteGroup = async (id: string, userEmail: string): Promise<void> 
   }
 };
 
-export const joinGroup = async (groupId: string, userData: { name: string; email: string }): Promise<HobbyGroup> => {
+export const joinGroup = async (groupId: string, userData: { name: string; email: string }, token?: string): Promise<HobbyGroup> => {
   try {
+    const headers: HeadersInit = { "Content-Type": "application/json" };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_BASE_URL}/groups/${groupId}/join`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify(userData),
+      mode: 'cors' // Explicitly request CORS
     });
     return handleResponse(response);
   } catch (error) {
@@ -116,7 +129,9 @@ export const joinGroup = async (groupId: string, userData: { name: string; email
 
 export const getUserGroups = async (email: string): Promise<HobbyGroup[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/groups/user/${encodeURIComponent(email)}`);
+    const response = await fetch(`${API_BASE_URL}/groups/user/${encodeURIComponent(email)}`, {
+      mode: 'cors' // Explicitly request CORS
+    });
     return handleResponse(response);
   } catch (error) {
     console.error(`API Error in getUserGroups for email ${email}:`, error);

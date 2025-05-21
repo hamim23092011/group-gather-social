@@ -11,7 +11,7 @@ export const handleResponse = async (response: Response) => {
 };
 
 // Define API base URL with fallback for local development
-export const API_BASE_URL = process.env.VITE_API_BASE_URL || "https://hobby-hub-backend-hamim.vercel.app/api";
+export const API_BASE_URL = process.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 // Helper function to create API request options with authentication
 export const createAuthenticatedRequestOptions = (token: string, method: string = 'GET', body?: any) => {
@@ -20,7 +20,8 @@ export const createAuthenticatedRequestOptions = (token: string, method: string 
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
-    }
+    },
+    mode: 'cors' // Explicitly request CORS mode
   };
   
   if (body) {
