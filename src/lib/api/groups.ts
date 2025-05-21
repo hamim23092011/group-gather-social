@@ -1,7 +1,7 @@
 
 import { HobbyGroup } from "./types";
 import { API_BASE_URL, getFallbackGroup } from "./mock-data";
-import { handleResponse } from "./utils";
+import { handleResponse, createAuthenticatedRequestOptions } from "./utils";
 
 // Groups API functions
 export const getGroups = async (): Promise<HobbyGroup[]> => {
@@ -58,31 +58,31 @@ export const createGroup = async (group: HobbyGroup, token: string): Promise<Hob
   }
 };
 
-export const updateGroup = async (id: string, group: Partial<HobbyGroup>, token: string): Promise<HobbyGroup> => {
+export const updateGroup = async (id: string, groupData: Partial<HobbyGroup>, userEmail: string): Promise<HobbyGroup> => {
   try {
+    // Include userEmail in the request for authorization check
+    const dataToSend = { ...groupData, userEmail };
+    
     const response = await fetch(`${API_BASE_URL}/groups/${id}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(group),
+      body: JSON.stringify(dataToSend),
     });
     return handleResponse(response);
   } catch (error) {
     console.error(`API Error in updateGroup for ID ${id}:`, error);
     // Return the updated group object as if it was updated successfully
-    return { ...getFallbackGroup(id), ...group };
+    return { ...getFallbackGroup(id), ...groupData };
   }
 };
 
-export const deleteGroup = async (id: string, token: string): Promise<void> => {
+export const deleteGroup = async (id: string, userEmail: string): Promise<void> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/groups/${id}`, {
+    // Include userEmail as query parameter for authorization check
+    const response = await fetch(`${API_BASE_URL}/groups/${id}?userEmail=${encodeURIComponent(userEmail)}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
     return handleResponse(response);
   } catch (error) {
@@ -92,13 +92,12 @@ export const deleteGroup = async (id: string, token: string): Promise<void> => {
   }
 };
 
-export const joinGroup = async (groupId: string, userData: { name: string; email: string }, token: string): Promise<HobbyGroup> => {
+export const joinGroup = async (groupId: string, userData: { name: string; email: string }): Promise<HobbyGroup> => {
   try {
     const response = await fetch(`${API_BASE_URL}/groups/${groupId}/join`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(userData),
     });
@@ -115,19 +114,15 @@ export const joinGroup = async (groupId: string, userData: { name: string; email
   }
 };
 
-export const getUserGroups = async (email: string, token: string): Promise<HobbyGroup[]> => {
+export const getUserGroups = async (email: string): Promise<HobbyGroup[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/groups/user/${email}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`${API_BASE_URL}/groups/user/${encodeURIComponent(email)}`);
     return handleResponse(response);
   } catch (error) {
     console.error(`API Error in getUserGroups for email ${email}:`, error);
     // Return mock data for user groups
     return Array(3).fill(0).map((_, i) => {
-      const group = getFallbackGroup(`${100 + i}`, email);
+      const group = getFallbackGroup(`${100 + i}`);
       group.createdBy.email = email;
       return group;
     });

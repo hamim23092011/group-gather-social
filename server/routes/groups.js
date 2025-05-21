@@ -58,7 +58,7 @@ router.patch('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Group not found' });
     }
     
-    // Check if the user updating is the creator
+    // Check if the user updating is the creator (simplified for now)
     if (group.createdBy.email !== req.body.userEmail) {
       return res.status(403).json({ message: 'You are not authorized to update this group' });
     }

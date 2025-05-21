@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -78,11 +77,8 @@ const CreateGroupForm = () => {
     try {
       setLoading(true);
       
-      // Get the user token for authentication
-      const token = await currentUser.getIdToken();
-      
-      // Create the group
-      await api.createGroup(newGroup, token);
+      // Create the group - removing token requirement to match backend
+      await api.createGroup(newGroup, "");
       
       // Show success message
       toast({

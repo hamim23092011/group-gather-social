@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { HobbyGroup, api } from "@/lib/api";
@@ -99,37 +98,28 @@ export default function GroupDetails() {
   // Join group
   const handleJoinGroup = async () => {
     try {
-      if (!currentUser || !group || !id) return;
+      if (!currentUser || !group || !id) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "You must be logged in to join this group",
+        });
+        return;
+      }
       
       setJoining(true);
       
-      // Get user token
-      const token = await currentUser.getIdToken();
-      
-      // Join the group
-      await api.joinGroup(
+      // Join the group - removed token requirement
+      const updatedGroup = await api.joinGroup(
         id,
         {
           name: currentUser.displayName || "Anonymous",
           email: currentUser.email || "",
-        },
-        token
+        }
       );
       
       // Update the UI to show the user as a member
-      setGroup(prev => {
-        if (!prev) return prev;
-        
-        const updatedMembers = [
-          ...(prev.members || []),
-          {
-            name: currentUser.displayName || "Anonymous",
-            email: currentUser.email || "",
-          },
-        ];
-        
-        return { ...prev, members: updatedMembers };
-      });
+      setGroup(updatedGroup);
       
       // Show success message
       toast({
