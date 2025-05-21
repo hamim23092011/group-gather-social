@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -10,7 +11,9 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "@emotion/react", // This helps with emotion JSX runtime
+    }),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
@@ -19,4 +22,13 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['@emotion/react', '@emotion/styled'],
+  },
+  build: {
+    rollupOptions: {
+      // If needed, we can explicitly externalize the problematic import
+      external: mode === 'development' ? [] : [],
+    },
+  }
 }));
