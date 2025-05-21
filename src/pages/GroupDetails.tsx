@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { HobbyGroup, api } from "@/lib/api";
@@ -109,13 +110,17 @@ export default function GroupDetails() {
       
       setJoining(true);
       
-      // Join the group - removed token requirement
+      // Get the user's token
+      const token = await currentUser.getIdToken();
+      
+      // Join the group - pass the token as the third parameter
       const updatedGroup = await api.joinGroup(
         id,
         {
           name: currentUser.displayName || "Anonymous",
           email: currentUser.email || "",
-        }
+        },
+        token
       );
       
       // Update the UI to show the user as a member
